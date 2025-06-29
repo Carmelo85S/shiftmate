@@ -1,4 +1,4 @@
-import type { HeadingProps } from "../../../types/types";
+import type { HeadingProps } from "../../types/types";
 
 const Heading = ({ title, subtitle, size = "md", color, colorSub }: HeadingProps) => {
   const sizeClasses = {

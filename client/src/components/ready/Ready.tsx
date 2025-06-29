@@ -1,6 +1,6 @@
 import { Clock10Icon, Users2 } from "lucide-react"
-import Button from "../ui/heading/Button"
-import Heading from "../ui/heading/Heading"
+import Button from "../ui/Button"
+import Heading from "../ui/Heading"
 
 const Ready = () => {
   return (

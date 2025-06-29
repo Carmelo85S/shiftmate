@@ -1,4 +1,4 @@
-import Heading from "../ui/heading/Heading";
+import Heading from "../ui/Heading";
 import { businessSteps, workerSteps } from "./data";
 
 const HowItWorks = () => {

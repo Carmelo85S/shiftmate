@@ -1,17 +1,73 @@
+import { useState } from "react";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterFormProps {
   setIsOpen: (open: null) => void;
   userType: "business" | "worker";
+  setIsAuthenticated: (auth: boolean) => void;  
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ setIsOpen, userType }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ setIsOpen, userType, setIsAuthenticated }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+  
   const buttonBg =
     userType === "business" ? "bg-yellow-400 hover:bg-yellow-300" : "bg-pink-500 hover:bg-pink-400 text-white";
 
   const inputFocus =
-    userType === "business" ? "focus:ring-yellow-300 focus:border-yellow-300" : "focus:ring-pink-400 focus:border-pink-400 text-white";
+    userType === "business"
+      ? "focus:ring-yellow-300 focus:border-yellow-300"
+      : "focus:ring-pink-400 focus:border-pink-400";
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+
+  if (password !== confirmPassword) {
+    return setError("Passwords do not match.");
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        userType,
+      }),
+    });
+
+    const data = await res.json();
+    console.log("Server response:", data);
+
+    if (!res.ok) {
+      return setError(data.error || "Something went wrong");
+    }
+
+    localStorage.setItem("user", JSON.stringify(data.data[0]));
+
+    alert("Registration successful!");
+    setIsAuthenticated(true);
+    setIsOpen(null);
+    navigate(`/complete-profile/${userType}`);
+
+  } catch (err) {
+    console.error(err);
+    setError("An error occurred.");
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
@@ -30,33 +86,40 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setIsOpen, userType }) => {
             {userType === "business" ? "Business" : "Worker"}
           </span>
         </h2>
-        <form className="flex flex-col gap-5">
+
+        {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <input
             type="text"
-            name="name"
             placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className={`border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${inputFocus}`}
             required
           />
           <input
             type="email"
-            name="email"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className={`border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${inputFocus}`}
             required
           />
           <input
             type="password"
-            name="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className={`border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${inputFocus}`}
             required
             minLength={6}
           />
           <input
             type="password"
-            name="confirmPassword"
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className={`border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${inputFocus}`}
             required
             minLength={6}

@@ -1,6 +1,6 @@
 import { Handshake } from "lucide-react";
-import Button from "../ui/heading/Button";
-import Heading from "../ui/heading/Heading";
+import Button from "../ui/Button";
+import Heading from "../ui/Heading";
 
 
 const pricingPlans = [

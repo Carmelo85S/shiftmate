@@ -1,5 +1,5 @@
 import { Clock10Icon, User2Icon, Users2 } from "lucide-react";
-import Button from "../ui/heading/Button";
+import Button from "../ui/Button";
 import Card from "./Card";
 
 type HeroProps = {
@@ -22,7 +22,7 @@ const Hero = ({ openModalAsBusiness, openModalAsWorker }: HeroProps) => {
             with <span className="text-pink-300">Workers</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-200 mb-8">
-            Work when you wwant, Hire when you need. Join today
+            Work when you wwant, Hire when you need. Join today.
           </p>
           <div className="flex justify-center lg:justify-start gap-4">
             <Button

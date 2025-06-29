@@ -1,5 +1,5 @@
 import { data } from "../hero/CardsData";
-import Heading from "../ui/heading/Heading";
+import Heading from "../ui/Heading";
 
 const WhyUs = () => {
   return (
