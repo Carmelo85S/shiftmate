@@ -1,5 +1,6 @@
 import { useState } from "react";
 import WorkerFormImg from "../../../src/assets/BusinessFormImg.png";
+import { useNavigate } from "react-router-dom";
 
 const WorkerProfile = () => {
   const [form, setForm] = useState({
@@ -14,6 +15,8 @@ const WorkerProfile = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,6 +71,7 @@ const WorkerProfile = () => {
       }
 
       setSuccess("Profile completed successfully!");
+      navigate('/jobs')
     } catch (err) {
       console.error(err);
       setError("An error occurred.");

@@ -14,6 +14,7 @@ const pricingPlans = [
       "Basic matching algorithm",
       "Email support",
     ],
+    labelText: "Choose Plan"
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ const pricingPlans = [
       "Phone & email support",
       "Detailed analytics dashboard",
     ],
+    labelText: "Choose Plan",
     popular: true,
   },
   {
@@ -39,6 +41,7 @@ const pricingPlans = [
       "24/7 priority support",
       "Advanced reporting",
     ],
+    labelText: "Contact us"
   },
 ];
 
@@ -55,7 +58,7 @@ const Pricing = () => {
 
 
       <div className="max-w-7xl m-auto mt-12 grid gap-8 md:grid-cols-3">
-        {pricingPlans.map(({ id, name, price, description, features, popular }) => (
+        {pricingPlans.map(({ id, name, price, description, features, popular, labelText }) => (
           <div
             key={id}
             className={`rounded-lg p-8 flex flex-col border ${
@@ -93,7 +96,7 @@ const Pricing = () => {
 
             <Button
               icon={<Handshake className="w-6 h-6" />}
-              label="Choose Plan"
+              label={labelText}
               bgColorClass="bg-yellow-400"
               textColorClass="text-indigo-900"
               hoverBgColorClass="bg-yellow-300"

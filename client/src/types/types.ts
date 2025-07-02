@@ -16,3 +16,33 @@ export interface ButtonProps {
   hoverBgColorClass: string;
   onClick?: () => void;
 }
+
+export type Job = {
+  [x: string]: any;
+  id: number;
+  title: string;
+  location: string;
+  industry: string;
+  employment_type: string;
+  salary_min: number;
+  salary_max: number;
+  date_start: string;
+  date_end: string;
+  time_start: string;
+  time_end: string;
+  requirements: string;
+  responsibilities: string;
+  company_name: string;
+};
+
+export type User = {
+  skills: string;
+  id: string;
+  email: string;
+  location: string;
+  bio: string;
+  availability: string;
+  company_name: string;
+  name: string;
+  user_type: string;
+};

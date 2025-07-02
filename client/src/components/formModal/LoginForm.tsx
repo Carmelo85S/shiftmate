@@ -35,16 +35,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ setIsOpen, setIsAuthenticated }) 
         return;
       }
 
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       alert(`Welcome back, ${data.user.name}!`);
       setIsOpen(null);
       setIsAuthenticated(true);
-      navigate("/complete-profile");
+
+      navigate("/main");
+      
     } catch (err) {
       console.error(err);
       setError("An error occurred during login.");
       setLoading(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">

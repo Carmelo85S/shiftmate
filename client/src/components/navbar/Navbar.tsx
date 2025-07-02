@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { LogInIcon, Menu, X } from "lucide-react";
 import Logo from '../../assets/logo.png';
+import Button from "../ui/Button";
 
 interface NavbarProps {
   openLoginModal: () => void;
@@ -33,12 +34,14 @@ const Navbar: React.FC<NavbarProps> = ({ openLoginModal }) => {
             <a href="#pricing" className="hover:text-indigo-600 transition">Pricing</a>
           </li>
           <li>
-            <button
+            <Button 
+              icon={<LogInIcon />} 
+              label={"Login"} 
+              bgColorClass="bg-yellow-400"
+              textColorClass="text-indigo-900"
+              hoverBgColorClass="bg-yellow-300"  
               onClick={handleLoginClick}
-              className="bg-yellow-400 text-indigo-900 font-semibold px-6 py-2 rounded-full hover:bg-yellow-300 transition"
-            >
-              Sign In
-            </button>
+            />
           </li>
         </ul>
 
@@ -65,12 +68,14 @@ const Navbar: React.FC<NavbarProps> = ({ openLoginModal }) => {
               <a href="#pricing" className="text-gray-800 text-lg hover:text-indigo-600 transition">Pricing</a>
             </li>
             <li>
-              <button
-                onClick={handleLoginClick}
-                className="w-full bg-yellow-400 text-indigo-900 font-semibold px-8 py-3 rounded-full hover:bg-yellow-300 transition"
-              >
-                Sign In
-              </button>
+              <Button 
+              icon={<LogInIcon />} 
+              label={"Login"} 
+              bgColorClass="bg-yellow-400"
+              textColorClass="text-indigo-900"
+              hoverBgColorClass="bg-yellow-300"  
+              onClick={handleLoginClick}
+            />
             </li>
           </ul>
         </nav>
