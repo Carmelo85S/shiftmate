@@ -6,7 +6,7 @@ import type { Job, User } from "../../types/types";
 const JobCard = ({
   job,
   user,
-  onApply,
+  onApply
 }: {
   job: Job;
   user: User | null;
@@ -89,6 +89,7 @@ const JobCard = ({
           />
         </div>
       )}
+      
     </div>
   );
 };

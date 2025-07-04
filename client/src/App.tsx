@@ -21,8 +21,10 @@ import Dashboard from "./page/dashboard/Dashboard";
 import MyProfile from "./page/my-profile/MyProfile";
 
 import NoNavbarLayout from "./components/layout/NoNavbarLayout";
-import AuthenticatedLayoutWithSidebar from "./components/layout/AuthenticatedLayoutWithTopNavbar";
 import PublicLayout from "./components/layout/PublicLayout";
+import AuthenticatedLayoutWithTopNavbar from "./components/layout/AuthenticatedLayoutWithTopNavbar";
+import Messages from "./components/message/Messages";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 const App = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -44,15 +46,20 @@ const App = () => {
           <Route path="/complete-profile/worker" element={<WorkerProfile />} />
         </Route>
 
-        {/* Authenticated routes with SidebarNavbar */}
+        {/* Authenticated routes */}
         <Route
-          element={<AuthenticatedLayoutWithSidebar setIsAuthenticated={setIsAuthenticated} />}
+          element={
+            <PrivateRoute isAuthenticated={isAuthenticated}>
+              <AuthenticatedLayoutWithTopNavbar setIsAuthenticated={setIsAuthenticated} />
+            </PrivateRoute>
+          }
         >
           <Route path="/jobs" element={<JobList />} />
           <Route path="/post-new-job" element={<JobForm />} />
           <Route path="/main" element={<Main />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/messages" element={<Messages />} />
         </Route>
 
         {/* Public routes with top Navbar */}
@@ -70,7 +77,6 @@ const App = () => {
                 <HowItWorks />
                 <Pricing />
                 <Ready />
-                <JobList />
                 <Footer />
               </>
             }

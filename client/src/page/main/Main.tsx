@@ -9,25 +9,31 @@ const Main = () => {
   const [searchResults, setSearchResults] = useState<Job[]>([]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-      <JobSearchBar onSearchResults={setSearchResults} />
+    <>
+      {/* JobSearchBar sticky full width with bg */}
+      <div className="w-full bg-gray-50 shadow-md sticky top-14 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <JobSearchBar onSearchResults={setSearchResults} />
+        </div>
+      </div>
 
-      <div className="flex flex-col md:flex-row md:space-x-8 mt-6">
-        
-        {/* Sidebar: full width mobile, fixed width desktop */}
-        <aside className="hidden md:flex w-full mx-auto md:w-72 mt-6 md:mt-0 items-center flex-col">
+      {/* Container principale */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 flex flex-col md:flex-row md:space-x-8">
+        {/* Left Sidebar */}
+        <aside className="w-full md:w-72 flex flex-col gap-2 items-center mb-6 md:mb-0 md:sticky top-64 md:h-[calc(100vh-256px)] md:overflow-y-auto">
           <Info />
           <SidebarTotals />
         </aside>
 
-        {/* Job list: full width on mobile, flex-grow on desktop */}
+        {/* Main Content */}
         <main className="w-full md:flex-1 mt-6 md:mt-0">
           <JobList jobs={searchResults} />
         </main>
+
+        
       </div>
-    </div>
+    </>
   );
 };
-
 
 export default Main;

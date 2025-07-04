@@ -37,41 +37,63 @@ const JobList = ({ jobs: propJobs }: JobListProps) => {
     }
   }, [propJobs]);
 
-  const handleApply = async (jobId: number) => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return alert("You must be logged in to apply");
+const handleApply = async (jobId: number) => {
+  const storedUser = localStorage.getItem("user");
+  if (!storedUser) return alert("You must be logged in to apply");
 
-    const user = JSON.parse(storedUser);
+  const user = JSON.parse(storedUser);
+  try {
+    // 1. Invia la candidatura
+    const applyResponse = await fetch("http://localhost:3000/api/apply", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        user_id: user.id,
+        job_id: jobId,
+      }),
+    });
 
-    try {
-      const response = await fetch("http://localhost:3000/api/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: user.id,
-          job_id: jobId,
-        }),
-      });
+    const applyResult = await applyResponse.json();
+    if (!applyResponse.ok) throw new Error(applyResult.error);
 
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+    const messageContent = `Hi! I just applied for your job posting. Looking forward to hearing from you.`;
 
-      alert("Application submitted!");
-    } catch (error) {
-      console.error("Error applying:", error);
-      alert("Failed to apply");
-    }
-  };
+    const messageResponse = await fetch("http://localhost:3000/api/messages", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        sender_id: user.id,
+        job_id: jobId,
+        content: messageContent,
+      }),
+    });
+
+    const messageResult = await messageResponse.json();
+    if (!messageResponse.ok) throw new Error(messageResult.error);
+
+    alert("Application submitted and message sent!");
+  } catch (error: any) {
+    console.error("Error applying:", error);
+    alert(error.message || "Failed to apply");
+  }
+};
+
 
   return (
     <section>
 
-      <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto px-4 mb-20 sm:px-6 lg:px-8">
         {jobs.length === 0 ? (
           <p className="text-center text-gray-500">No jobs found.</p>
         ) : (
           jobs.map((job) => (
-            <JobCard key={job.id} job={job} user={user} onApply={handleApply} />
+            <JobCard key={job.id} job={job} user={user} onApply={handleApply}  />
           ))
         )}
       </div>

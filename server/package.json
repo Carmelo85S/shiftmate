@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.50.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.0"
+    "dotenv": "^16.6.0",
+    "multer": "^2.0.1"
   }
 }

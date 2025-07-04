@@ -62,7 +62,6 @@ const PostedJobs = () => {
     }
   };
 
-
   const deleteJob = async (id: number) => {
     const confirmed = window.confirm("Are you sure you want to delete this job?");
     if (!confirmed) return;
@@ -87,107 +86,174 @@ const PostedJobs = () => {
     fetchJobs();
   }, []);
 
-  if (loading) return <div className="text-center py-10 text-gray-500">Loading jobs...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
-  if (jobs.length === 0) return <div className="text-center py-10 text-gray-600">No jobs posted yet.</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-500 text-base font-medium animate-pulse">
+        Loading jobs...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red-600 text-base font-semibold">
+        {error}
+      </div>
+    );
+
+  if (jobs.length === 0)
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600 text-base">
+        No jobs posted yet.
+      </div>
+    );
 
   return (
-    <div className="ml-0 md:ml-64 max-w-6xl mx-auto px-6 mt-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Posted Jobs</h1>
-      <div className="grid gap-6 md:grid-cols-2">
+    <section className="max-w-4xl mx-auto px-6 mt-24 mb-20">
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+          <Briefcase className="w-7 h-7 text-blue-600" />
+          Posted Jobs
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">Manage your job postings below.</p>
+      </div>
+
+      <div className="space-y-6">
         {jobs.map((job) => (
           <div
             key={job.id}
-            className="relative bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all p-6"
+            className="bg-white rounded-xl shadow-md border border-gray-100 p-6 relative hover:shadow-lg transition-shadow"
           >
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
-                <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                  <MapPin className="w-4 h-4 text-gray-400" /> {job.location}
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-gray-600" />
+                  {job.title}
+                </h3>
+                <p className="text-sm text-gray-600 flex items-center gap-1 mt-1">
+                  <MapPin className="w-4 h-4" />
+                  {job.location} &middot; {job.industry}
                 </p>
+                <span
+                  className={`inline-block mt-2 px-3 py-0.5 rounded-full text-xs font-semibold select-none
+                    ${
+                      job.is_active
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                >
+                  {job.is_active ? "Active" : "Inactive"}
+                </span>
               </div>
-              <span className={`text-xs font-medium px-3 py-1 rounded-full ${job.is_active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                {job.is_active ? "Active" : "Inactive"}
-              </span>
-            </div>
 
-            <p className="text-sm text-gray-700 mb-4 line-clamp-3">{job.description}</p>
-
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-600">
-              <p className="flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-gray-400" /> {job.employment_type}
-              </p>
-              <p className="flex items-center gap-2">
-                <Euro className="w-4 h-4 text-gray-400" /> {job.salary_min}–{job.salary_max} {job.currency}
-              </p>
-              <p className="flex items-center gap-2">
-                <CalendarDays className="w-4 h-4 text-gray-400" /> {job.date_start} → {job.date_end}
-              </p>
-              <p className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" /> {job.time_start}–{job.time_end}
-              </p>
-            </div>
-
-            <div className="mt-6 flex justify-between items-center">
-              <button
-                onClick={() => setSelectedJob(job)}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium underline underline-offset-2 transition"
-              >
-                View details
-              </button>
               <button
                 onClick={() => deleteJob(job.id)}
-                className="text-red-500 hover:text-red-600 flex items-center gap-1 text-sm font-medium transition"
+                aria-label="Delete job"
+                className="text-red-500 hover:text-red-600 transition flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
                 title="Delete Job"
               >
-                <Trash2 className="w-4 h-4" />
-                Delete
+                <Trash2 className="w-6 h-6" />
               </button>
             </div>
+
+            <p className="text-gray-700 mt-4 text-sm line-clamp-3">{job.description}</p>
+
+            <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-600">
+              <p className="flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-gray-400" /> {job.employment_type}
+              </p>
+              <p className="flex items-center gap-2">
+                <Euro className="w-5 h-5 text-gray-400" /> {job.salary_min}–{job.salary_max} {job.currency}
+              </p>
+              <p className="flex items-center gap-2">
+                <CalendarDays className="w-5 h-5 text-gray-400" />{" "}
+                {new Date(job.date_start).toLocaleDateString()} &rarr;{" "}
+                {new Date(job.date_end).toLocaleDateString()}
+              </p>
+              <p className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-gray-400" /> {job.time_start}–{job.time_end}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setSelectedJob(job)}
+              className="mt-6 text-blue-600 hover:text-blue-700 transition font-semibold text-sm focus:outline-none focus:underline"
+            >
+              View details
+            </button>
           </div>
         ))}
       </div>
 
       {/* Modal */}
       {selectedJob && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center px-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
+          onClick={() => setSelectedJob(null)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] overflow-y-auto p-8 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={() => setSelectedJob(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
+              className="absolute top-5 right-5 text-gray-500 hover:text-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
+              aria-label="Close modal"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedJob.title}</h2>
-            <p className="text-sm text-gray-500 mb-4">{selectedJob.location} · {selectedJob.industry}</p>
-            <p className="text-gray-700 mb-6 whitespace-pre-line">{selectedJob.description}</p>
+
+            <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
+              <Briefcase className="w-7 h-7 text-blue-600" />
+              {selectedJob.title}
+            </h3>
+
+            <p className="flex items-center gap-1 text-gray-600 text-sm mb-2">
+              <MapPin className="w-5 h-5" />
+              Location & Industry:
+            </p>
+            <p className="flex items-center gap-2 text-gray-700 text-sm mb-6">
+              <span>{selectedJob.location}</span>
+              <span>•</span>
+              <span>{selectedJob.industry}</span>
+            </p>
+
+            <h4 className="text-lg font-semibold mb-2 text-gray-800">Description</h4>
+            <p className="mb-6 whitespace-pre-line text-gray-700 text-sm">
+              {selectedJob.description || "No description provided."}
+            </p>
 
             {selectedJob.requirements && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Requirements</h3>
-                <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                  {selectedJob.requirements.split('\n').map((req, idx) => (
-                    <li key={idx}>{req}</li>
+              <section className="mb-6">
+                <h4 className="text-lg font-semibold mb-2 text-gray-800">Requirements</h4>
+                <ul className="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                  {selectedJob.requirements.split("\n").map((req, i) => (
+                    <li key={i}>{req}</li>
                   ))}
                 </ul>
-              </div>
+              </section>
             )}
 
             {selectedJob.responsibilities && (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Responsibilities</h3>
-                <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                  {selectedJob.responsibilities.split('\n').map((resp, idx) => (
-                    <li key={idx}>{resp}</li>
+              <section>
+                <h4 className="text-lg font-semibold mb-2 text-gray-800">Responsibilities</h4>
+                <ul className="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                  {selectedJob.responsibilities.split("\n").map((resp, i) => (
+                    <li key={i}>{resp}</li>
                   ))}
                 </ul>
-              </div>
+              </section>
             )}
+
+            <button
+              onClick={() => setSelectedJob(null)}
+              className="mt-8 px-5 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-gray-400"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

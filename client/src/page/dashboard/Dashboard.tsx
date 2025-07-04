@@ -13,7 +13,7 @@ const Dashboard = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setRole(user.user_type);  // use user_type from your user object
+      setRole(user.user_type);
     }
   }, []);
 

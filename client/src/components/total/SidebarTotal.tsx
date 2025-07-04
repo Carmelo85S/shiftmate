@@ -24,7 +24,7 @@ const SidebarTotals = () => {
   }, []);
 
   return (
-    <aside className="bg-white rounded-2xl shadow-sm border border-gray-200 w-full max-w-sm p-6 mt-10">
+    <aside className="bg-white rounded-2xl shadow-sm border border-gray-200 w-full max-w-sm p-4 mt-2">
       <header className="mb-5">
         <h3 className="text-xl font-semibold text-gray-900 tracking-wide">Statistics</h3>
       </header>

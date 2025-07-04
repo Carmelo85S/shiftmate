@@ -12,10 +12,8 @@ const JobSearchBar = ({ onSearchResults }: JobSearchBarProps) => {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("");
 
-  // Effect to auto fetch all jobs when all inputs are cleared
   useEffect(() => {
     if (!keyword && !location && !type) {
-      // Fetch all jobs and update results
       const fetchAllJobs = async () => {
         try {
           const response = await fetch("http://localhost:3000/api/job", {
@@ -69,13 +67,22 @@ const JobSearchBar = ({ onSearchResults }: JobSearchBarProps) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-2">Find Your Next Shift</h2>
-      <p className="text-gray-600 text-sm mb-6">
-        Just pick one filter or combine a few — whatever works best for you to land your perfect shift.
-      </p>
+    <div
+      className="max-w-7xl bg-white rounded-2xl shadow-sm border p-4
+                 md:sticky md:top-20 md:z-30"
+      style={{ maxHeight: "80vh", overflowY: "auto" }}
+    >
+      <div className="flex justify-start items-baseline mb-6flex-row">
+        <h2 className="text-xl font-semibold text-gray-800 p-4">
+          Find Your Next Shift
+        </h2>
+        <p className="text-gray-600 text-sm mb-6">
+          Just pick one filter or combine a few — whatever works best for you to
+          land your perfect shift.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="flex flex-col space-y-4 md:grid md:grid-cols-4 md:gap-3 md:space-y-0">
         {/* Keyword Input */}
         <div className="flex items-center border rounded-lg px-3 py-2 bg-gray-50">
           <Search className="w-5 h-5 text-gray-400 mr-2" />
@@ -117,13 +124,16 @@ const JobSearchBar = ({ onSearchResults }: JobSearchBarProps) => {
         </div>
 
         {/* Search Button */}
-        <Button icon={<Search />} 
-          label={"Search"} 
-          bgColorClass="bg-yellow-400"
-          textColorClass="text-indigo-900"
-          hoverBgColorClass="bg-yellow-300"  
-          onClick={handleSearch}
-        />
+        <div className="flex items-center justify-center">
+          <Button
+            icon={<Search />}
+            label={"Search"}
+            bgColorClass="bg-yellow-400"
+            textColorClass="text-indigo-900"
+            hoverBgColorClass="bg-yellow-300"
+            onClick={handleSearch}
+          />
+        </div>
       </div>
     </div>
   );

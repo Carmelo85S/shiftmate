@@ -467,22 +467,73 @@ app.get('/api/user/:id/applications', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('applications')
-      .select('jobs(*)')
+      .select(`
+        jobs (
+          id,
+          title,
+          description,
+          location,
+          industry,
+          employment_type,
+          salary_min,
+          salary_max,
+          date_start,
+          date_end,
+          requirements,
+          responsibilities,
+          users (
+            company_name,
+            company_website
+          )
+        )
+      `)
       .eq('user_id', userID);
 
     if (error) {
-      console.error('Supabase error fetching applications:', error);
-      return res.status(500).json({ error: 'Failed to fetch applications', details: error.message });
+      throw error;
     }
 
-    if (!data || data.length === 0) {
-      return res.status(404).json({ error: 'No applications found for this user' });
+    // Flatten company info inside jobs object
+    const applications = data.map((app) => {
+      return {
+        ...app,
+        jobs: {
+          ...app.jobs,
+          company_name: app.jobs.users?.company_name || null,
+          company_website: app.jobs.users?.company_website || null,
+        },
+      };
+    });
+
+    return res.status(200).json(applications);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to fetch applications' });
+  }
+});
+
+app.post('/api/applications/cancel', async (req, res) => {
+  const { user_id, job_id } = req.body;
+
+  if (!user_id || !job_id) {
+    return res.status(400).json({ error: 'Missing user_id or job_id' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('applications')
+      .delete()
+      .eq('user_id', user_id)
+      .eq('job_id', job_id);
+
+    if (error) {
+      throw error;
     }
 
-    return res.status(200).json(data);
-  } catch (err) {
-    console.error('Unexpected error fetching applications:', err);
-    return res.status(500).json({ error: 'Unexpected server error' });
+    res.status(200).json({ message: 'Application cancelled', data });
+  } catch (error) {
+    console.error('Cancel application error:', error);
+    res.status(500).json({ error: 'Failed to cancel application' });
   }
 });
 
@@ -564,6 +615,128 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
+
+
+
+
+
+app.post('/api/messages', async (req, res) => {
+  const { sender_id, job_id, content } = req.body;
+
+  if (!sender_id || !job_id || !content) {
+    return res.status(400).json({ error: 'Missing sender_id, job_id or content' });
+  }
+
+  try {
+    // 1. Get the receiver_id (job owner)
+    const { data: job, error: jobError } = await supabase
+      .from('jobs')
+      .select('user_id')
+      .eq('id', job_id)
+      .single();
+
+    if (jobError || !job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    const receiver_id = job.user_id;
+
+    // 2. Insert message including job_id
+    const { data: message, error: messageError } = await supabase
+      .from('messages')
+      .insert([{ sender_id, receiver_id, job_id, content }])
+      .single();
+
+    if (messageError) {
+      throw messageError;
+    }
+
+    res.status(201).json({ message: 'Message sent', data: message });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
+app.patch('/api/messages/mark-read', async (req, res) => {
+  console.log('mark-read called with body:', req.body);
+  const { message_id } = req.body;
+
+  if (!message_id) {
+    return res.status(400).json({ error: 'Missing message_id' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('messages')
+      .update({ is_read: true })
+      .eq('id', message_id)
+      .select();
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    res.status(200).json({ message: 'Message marked as read', data: data[0] });
+  } catch (error) {
+    console.error('Error updating message:', error);
+    res.status(500).json({ error: 'Failed to mark message as read' });
+  }
+});
+
+
+// GET /api/messages/:userId
+app.get('/api/messages/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('messages')
+      .select(`
+        id,
+        content,
+        created_at,
+        job_id,
+        is_read,
+        job:jobs(title),
+        sender:users!fk_sender(id, name, email)
+      `)
+      .eq('receiver_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    console.log('Messages data:', data);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Fetch inbox messages error:', error);
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+//Un read messages count
+app.get('/api/messages/unread-count/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const { data, error, count } = await supabase
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('receiver_id', userId)
+      .eq('is_read', false);
+
+    if (error) throw error;
+
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch unread count' });
+  }
+});
 
 
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LogOut, Menu, X, Mail } from "lucide-react";
 import Logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
@@ -11,6 +11,69 @@ interface NavbarProps {
 const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [messageCount, setMessageCount] = useState<number>(0);
+
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user.id) return;
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/messages/unread-count/${user.id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setMessageCount(data.count);
+        }
+      } catch (e) {
+        console.error("Failed to fetch unread messages count", e);
+      }
+    };
+
+    fetchUnreadCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user.id) return;
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/messages/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const data = await res.json();
+        if (res.ok && Array.isArray(data)) {
+          setMessageCount(data.length);
+        }
+      } catch (err) {
+        console.error("Failed to fetch message count", err);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  // Inside TopNavbar
+  useEffect(() => {
+    window.updateMessageCount = (valueOrUpdater) => {
+      setMessageCount((prev) =>
+        typeof valueOrUpdater === "function"
+          ? valueOrUpdater(prev)
+          : valueOrUpdater
+      );
+    };
+
+    return () => {
+      window.updateMessageCount = undefined;
+    };
+  }, []);
+
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -28,6 +91,18 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-6 items-center">
+            <Link
+              to="/messages"
+              className="relative text-gray-800 hover:text-indigo-600 transition"
+            >
+              <Mail size={22} />
+              {messageCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {messageCount}
+                </span>
+              )}
+            </Link>
+
             <Link
               to="/main"
               className="text-gray-800 font-medium hover:text-indigo-600 transition"
@@ -73,6 +148,14 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-md px-4 pb-4 space-y-4">
+          <Link
+            to="/messages"
+            className="block text-gray-800 font-medium hover:text-indigo-600"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Messages {messageCount > 0 && <span className="ml-1 text-sm text-red-500">({messageCount})</span>}
+          </Link>
+
           <Link
             to="/main"
             className="block text-gray-800 font-medium hover:text-indigo-600"
