@@ -574,6 +574,7 @@ app.get('/api/tot-users', async (req, res) => {
   }
 });
 
+//Search enpoint Main
 app.get("/api/search", async (req, res) => {
   const { keyword, location, type } = req.query;
 
@@ -615,11 +616,49 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
+//Search endpoint for business dashboard
+app.get('/api/search/users', async(req, res) => {
+  const { keyword, skills, availability } = req.query;
+  if (!keyword && !skills && !availability) {
+    return res.status(400).json({ error: 'At least one search parameter is required' });
+  }
+  try {
+    let query = supabase
+    .from('users')
+    .select('*')
+    .eq('user_type', 'worker')
+
+    if (keyword) {
+      query = query.ilike("title", `%${keyword}%`);
+    }
+    
+    if (skills) {
+      const skillList = Array.isArray(skills) ? skills : skills.split(',');
+      for (const skill of skillList) {
+        query = query.ilike('skills', `%${skill.trim()}%`);
+      }
+    }
+    
+    if (availability) {
+      query = query.eq("availability", availability);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Supabase search error:", error);
+      return res.status(500).json({ error: "Search failed" });
+    }
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Server error during search:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
-
-
-
+//Messages API
 app.post('/api/messages', async (req, res) => {
   const { sender_id, job_id, content } = req.body;
 
@@ -685,7 +724,6 @@ app.patch('/api/messages/mark-read', async (req, res) => {
     res.status(500).json({ error: 'Failed to mark message as read' });
   }
 });
-
 
 // GET /api/messages/:userId
 app.get('/api/messages/:userId', async (req, res) => {

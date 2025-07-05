@@ -8,32 +8,13 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-
-interface Job {
-  id: number;
-  title: string;
-  description: string;
-  location: string;
-  industry: string;
-  employment_type: string;
-  salary_min: number;
-  salary_max: number;
-  currency: string;
-  date_start: string;
-  date_end: string;
-  time_start: string;
-  time_end: string;
-  created_at: string;
-  is_active: boolean;
-  requirements?: string;
-  responsibilities?: string;
-}
+import type {PostedJobs} from '../../types/types'
 
 const PostedJobs = () => {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<PostedJobs[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [selectedJob, setSelectedJob] = useState<PostedJobs | null>(null);
 
   const fetchJobs = async () => {
     try {
@@ -108,7 +89,7 @@ const PostedJobs = () => {
     );
 
   return (
-    <section className="max-w-4xl mx-auto px-6 mt-24 mb-20">
+    <section className="max-w-4xl mx-auto px-6 mt-10 mb-20">
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
           <Briefcase className="w-7 h-7 text-blue-600" />

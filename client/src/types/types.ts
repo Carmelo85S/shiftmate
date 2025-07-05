@@ -46,3 +46,23 @@ export type User = {
   name: string;
   user_type: string;
 };
+
+export interface PostedJobs {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  industry: string;
+  employment_type: string;
+  salary_min: number;
+  salary_max: number;
+  currency: string;
+  date_start: string;
+  date_end: string;
+  time_start: string;
+  time_end: string;
+  created_at: string;
+  is_active: boolean;
+  requirements?: string;
+  responsibilities?: string;
+}
