@@ -8,13 +8,13 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import type {PostedJobs} from '../../types/types'
+import type {PostedJob} from '../../types/types'
 
 const PostedJobs = () => {
-  const [jobs, setJobs] = useState<PostedJobs[]>([]);
+  const [jobs, setJobs] = useState<PostedJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedJob, setSelectedJob] = useState<PostedJobs | null>(null);
+  const [selectedJob, setSelectedJob] = useState<PostedJob | null>(null);
 
   const fetchJobs = async () => {
     try {

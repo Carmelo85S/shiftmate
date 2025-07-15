@@ -104,7 +104,7 @@ const AppliedJobs = () => {
     );
 
   return (
-    <section className="max-w-3xl mx-auto px-4 mt-24 mb-20 sm:px-6 lg:px-8">
+    <section className="max-w-3xl mx-auto px-4 mb-20 sm:px-6 lg:px-8">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
           <Briefcase className="w-6 h-6 text-blue-600" />

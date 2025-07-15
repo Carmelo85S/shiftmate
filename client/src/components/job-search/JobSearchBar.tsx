@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Search, MapPin, Briefcase } from "lucide-react";
 import type { Job } from "../../types/types";
+
 import Button from "../ui/Button";
 
 interface JobSearchBarProps {

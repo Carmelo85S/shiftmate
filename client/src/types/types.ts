@@ -47,7 +47,7 @@ export type User = {
   user_type: string;
 };
 
-export interface PostedJobs {
+export interface PostedJob {
   id: number;
   title: string;
   description: string;

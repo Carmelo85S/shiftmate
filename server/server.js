@@ -618,8 +618,8 @@ app.get("/api/search", async (req, res) => {
 
 //Search endpoint for business dashboard
 app.get('/api/search/users', async(req, res) => {
-  const { keyword, skills, availability } = req.query;
-  if (!keyword && !skills && !availability) {
+  const { skills, availability } = req.query;
+  if (!skills && !availability) {
     return res.status(400).json({ error: 'At least one search parameter is required' });
   }
   try {
@@ -627,17 +627,12 @@ app.get('/api/search/users', async(req, res) => {
     .from('users')
     .select('*')
     .eq('user_type', 'worker')
-
-    if (keyword) {
-      query = query.ilike("title", `%${keyword}%`);
-    }
     
     if (skills) {
-      const skillList = Array.isArray(skills) ? skills : skills.split(',');
-      for (const skill of skillList) {
-        query = query.ilike('skills', `%${skill.trim()}%`);
-      }
+      const skillList = Array.isArray(skills) ? skills : skills.split(',').map(s => s.trim());
+      query = query.contains('skills', skillList);
     }
+
     
     if (availability) {
       query = query.eq("availability", availability);
