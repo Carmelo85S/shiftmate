@@ -192,6 +192,28 @@ app.post('/api/profile', async (req, res) => {
   }
 });
 
+//Bulk user
+app.post('/api/bulk-user', async (req, res) => {
+  const users = req.body;   
+  if (!Array.isArray(users) || users.length === 0) {
+    return res.status(400).json({ error: 'Invalid user data' });
+  } 
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .insert(users)
+      .select();
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to create users' });
+    }
+    res.status(201).json({ message: 'Users created successfully', data });
+  } catch (err) {
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/api/profile/:id', async (req, res) => {
   const userId = req.params.id;
 
@@ -388,6 +410,27 @@ app.post('/api/job', async (req, res) => {
     }
 
     res.status(201).json({ message: 'Job created successfully', data });
+  } catch (err) {
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/job-bulk', async (req, res) => {
+  const jobs = req.body;
+  if (!Array.isArray(jobs) || jobs.length === 0) {
+    return res.status(400).json({ error: 'Invalid job data' });
+  } 
+  try {
+    const { data, error } = await supabase
+      .from('jobs')
+      .insert(jobs)
+      .select();
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to create jobs' });
+    }
+    res.status(201).json({ message: 'Jobs created successfully', data });
   } catch (err) {
     console.error('Server error:', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -770,7 +813,5 @@ app.get('/api/messages/unread-count/:userId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch unread count' });
   }
 });
-
-
 
 app.listen(3000, () => console.log('Server running on port 3000'));

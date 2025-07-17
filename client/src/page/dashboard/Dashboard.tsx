@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [searchResultsUsers, setSearchResultsUsers] = useState<User[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -40,6 +41,13 @@ const Dashboard = () => {
           <aside className="w-full md:w-72 flex flex-col gap-2 items-center mb-6 md:mb-0 md:sticky">
             <Info />
             <SidebarTotals />
+            {/* Search form */}
+            <SearchWorker
+              onSearchResults={(results) => {
+                setSearchResultsUsers(results);
+                setHasSearched(true);
+              }}
+            />
             <Button
               label="Post a New Job"
               onClick={handlePostJob}
@@ -52,52 +60,46 @@ const Dashboard = () => {
 
           {/* Main content */}
           <div className="flex-1">
-            {/* Search form */}
-            <SearchWorker
-              onSearchResults={(results) => {
-                setSearchResultsUsers(results);
-                setHasSearched(true);
-              }}
-            />
 
             {/* Search results */}
-            {hasSearched && (
-              <div className="mt-6">
-                <h2 className="text-lg font-semibold mb-4">Worker Search Results:</h2>
-                {searchResultsUsers.length > 0 ? (
-                  <ul className="space-y-3">
-                    {searchResultsUsers.map((user) => (
-                      <li
-                        key={user.id}
-                        className="border p-4 rounded-md shadow-sm bg-white flex items-start space-x-4"
-                      >
-                        {/* Avatar or fallback */}
-                        <div className="w-12 h-12 bg-indigo-100 text-indigo-800 font-semibold flex items-center justify-center rounded-full text-sm uppercase">
-                          {user.name?.charAt(0) || "U"}
-                        </div>
+{hasSearched && (
+  <div className="mt-6">
+    <h2 className="text-lg font-semibold mb-4 text-indigo-900">Worker Search Results:</h2>
 
-                        {/* Info */}
-                        <div className="flex-1">
-                          <p className="font-bold text-indigo-900">{user.name || "Unnamed Worker"}</p>
-                          
-                          <p className="text-sm text-gray-600">
-                            <strong>Skills:</strong>{" "}
-                            {Array.isArray(user.skills)
-                              ? user.skills.join(", ")
-                              : user.skills || "N/A"}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            <strong>Availability:</strong> {user.availability || "N/A"}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-500 italic">No workers matched your search.</p>
-                )}
-              </div>
-            )}
+    {searchResultsUsers.length > 0 ? (
+      <div className="bg-white rounded-lg shadow-md p-4 max-h-96 overflow-y-auto space-y-4 border border-gray-200">
+        {searchResultsUsers.map((user) => (
+          <div
+            key={user.id}
+            className="flex items-center p-3 bg-indigo-50 rounded-lg shadow-sm hover:bg-indigo-100 transition"
+          >
+            <div className="w-10 h-10 flex-shrink-0 bg-yellow-400 text-indigo-900 rounded-full flex items-center justify-center font-bold text-sm uppercase">
+              {user.name?.charAt(0) || "U"}
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-bold text-indigo-900">{user.name}</p>
+              <p className="text-xs text-gray-600">{user.email || "No email"}</p>
+              <p className="text-xs text-gray-600">{user.phone || "No phone"}</p>
+              <p className="text-xs text-gray-500">
+                <strong>Skills:</strong>{" "}
+                {Array.isArray(user.skills)
+                  ? user.skills.join(", ")
+                  : user.skills || "N/A"}
+              </p>
+              <p className="text-xs text-gray-500">
+                <strong>Availability:</strong> {user.availability || "N/A"}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500 italic">No workers matched your search.</p>
+    )}
+  </div>
+)}
+
+
 
             {/* Posted jobs */}
             <div className="mt-12">

@@ -106,8 +106,8 @@ const AppliedJobs = () => {
   return (
     <section className="max-w-3xl mx-auto px-4 mb-20 sm:px-6 lg:px-8">
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <Briefcase className="w-6 h-6 text-blue-600" />
+        <h2 className="text-xl font-semibold text-indigo-900 flex items-center gap-2">
+          <Briefcase className="w-6 h-6 text-yellow-400" />
           Applied Jobs
         </h2>
         <p className="text-sm text-gray-500">Here's a list of jobs you’ve applied to.</p>
@@ -117,15 +117,17 @@ const AppliedJobs = () => {
         {appliedJobs.map((job) => (
           <div
             key={job.id}
-            className="bg-white rounded-lg shadow border border-gray-100 p-4"
+            className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 transition hover:shadow-lg"
           >
-            <h3 className="text-base font-medium text-gray-800 flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-gray-600" />
+
+            <h3 className="text-lg font-semibold text-indigo-900 flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-indigo-500" />
               {job.title}
             </h3>
+
             {job.company_name && (
               <p className="text-sm text-gray-600 flex items-center gap-1 mt-1">
-                <Building className="w-4 h-4" />
+                <Building className="w-4 h-4 text-indigo-400" />
                 Company:{" "}
                 {job.company_website ? (
                   <a
@@ -145,17 +147,19 @@ const AppliedJobs = () => {
               <MapPin className="w-4 h-4" /> {job.location} • {job.employment_type}
             </p>
             <p className="text-sm text-gray-700 mt-2 flex items-center gap-1">
-              <DollarSign className="w-4 h-4" /> Salary: €{job.salary_min} - €{job.salary_max}
+              <DollarSign className="w-4 h-4 text-yellow-400" />
+              Salary: €{job.salary_min} - €{job.salary_max}
             </p>
+
             <p className="text-sm text-gray-700 flex items-center gap-1">
               <Calendar className="w-4 h-4" /> Dates: {formatDate(job.date_start)} → {formatDate(job.date_end)}
             </p>
 
-            <div className="mt-3 flex gap-3">
+            <div className="mt-4 flex gap-3">
               <button
                 onClick={() => setSelectedJob(job)}
                 aria-label="View job details"
-                className="text-blue-600 hover:text-blue-700 transition"
+                className="text-indigo-600 hover:text-indigo-700 transition"
                 title="View details"
               >
                 <Eye className="w-5 h-5" />
@@ -164,12 +168,13 @@ const AppliedJobs = () => {
               <button
                 onClick={() => cancelApplication(job.id)}
                 aria-label="Cancel application"
-                className="text-red-500 hover:text-red-600 transition"
+                className="text-yellow-500 hover:text-yellow-600 transition"
                 title="Cancel application"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
+
           </div>
         ))}
       </div>
@@ -184,10 +189,11 @@ const AppliedJobs = () => {
             className="bg-white rounded-lg shadow p-4 max-w-xl w-full overflow-auto max-h-[80vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-              <Briefcase className="w-6 h-6 text-blue-600" />
+            <h3 className="text-xl font-semibold mb-3 flex items-center gap-2 text-indigo-900">
+              <Briefcase className="w-6 h-6 text-yellow-400" />
               {selectedJob.title}
             </h3>
+
 
             {selectedJob.company_name && (
               <p className="mb-2 text-sm text-gray-700 flex items-center gap-1">
@@ -261,10 +267,11 @@ const AppliedJobs = () => {
 
             <button
               onClick={() => setSelectedJob(null)}
-              className="mt-6 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+              className="mt-6 px-4 py-2 bg-indigo-100 rounded hover:bg-indigo-200 text-sm text-indigo-900"
             >
               Close
             </button>
+
           </div>
         </div>
       )}

@@ -39,6 +39,7 @@ export type User = {
   skills: string;
   id: string;
   email: string;
+  phone?: string;
   location: string;
   bio: string;
   availability: string;

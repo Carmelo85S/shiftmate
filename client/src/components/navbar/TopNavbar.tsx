@@ -13,7 +13,6 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const [messageCount, setMessageCount] = useState<number>(0);
 
-
   useEffect(() => {
     const fetchUnreadCount = async () => {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
