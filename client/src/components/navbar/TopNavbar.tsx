@@ -45,7 +45,6 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
           setMessageCount(data.length);

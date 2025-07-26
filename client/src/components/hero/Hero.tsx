@@ -21,7 +21,7 @@ const Hero = ({ openModalAsBusiness, openModalAsWorker }: HeroProps) => {
           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 drop-shadow-lg">
             Work Smarter. <br />
             <span className="text-yellow-400 underline decoration-yellow-300 decoration-4">
-              Hire Faster.{" "}
+              Hire Faster{" "}
             </span>{" "}.
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-md drop-shadow-sm">

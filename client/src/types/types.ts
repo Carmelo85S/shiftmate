@@ -67,3 +67,13 @@ export interface PostedJob {
   requirements?: string;
   responsibilities?: string;
 }
+
+export interface Message {
+  id: string;
+  content: string;
+  created_at: string;
+  job_id: number;
+  is_read: boolean;
+  job?: { title: string } | null;
+  sender: { id: string; name: string; email: string } | null;
+}
