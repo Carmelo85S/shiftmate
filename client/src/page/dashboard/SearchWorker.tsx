@@ -93,7 +93,7 @@ const SearchWorker = ({ onSearchResults }: WorkerSearchBarProps) => {
       </div>
 
       {/* Search Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-center">
         <Button
           icon={<Search />}
           label="Search"

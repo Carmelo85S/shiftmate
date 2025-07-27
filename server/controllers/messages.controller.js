@@ -191,9 +191,9 @@ export const getUnreadMessage = async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const { data, error, count } = await supabase
+    const { count, error } = await supabase
       .from('messages')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .eq('receiver_id', userId)
       .eq('is_read', false);
 
@@ -201,6 +201,8 @@ export const getUnreadMessage = async (req, res) => {
 
     res.status(200).json({ count });
   } catch (error) {
+    console.error("Supabase unread-count error:", error);
     res.status(500).json({ error: 'Failed to fetch unread count' });
   }
 };
+

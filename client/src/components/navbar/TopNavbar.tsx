@@ -16,6 +16,7 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
+      console.log("User:", user);
       if (!user.id) return;
 
       try {
@@ -23,8 +24,12 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         const data = await res.json();
+        console.log("📬 Unread message data:", data);
         if (res.ok) {
+          console.log("Unread count data:", data);
           setMessageCount(data.count);
+        } else {
+          console.error("Unread count failed:", data);
         }
       } catch (e) {
         console.error("Failed to fetch unread messages count", e);
@@ -32,29 +37,6 @@ const TopNavbar: React.FC<NavbarProps> = ({ setIsAuthenticated }) => {
     };
 
     fetchUnreadCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      if (!user.id) return;
-
-      try {
-        const res = await fetch(`http://localhost:3000/api/messages/${user.id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok && Array.isArray(data)) {
-          setMessageCount(data.length);
-        }
-      } catch (err) {
-        console.error("Failed to fetch message count", err);
-      }
-    };
-
-    fetchMessages();
   }, []);
 
   // Inside TopNavbar
