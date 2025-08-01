@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { User } from "../../types/types";
 import { Search } from "lucide-react";
 import Button from "../../components/ui/Button";
@@ -11,34 +11,18 @@ const SearchWorker = ({ onSearchResults }: WorkerSearchBarProps) => {
   const [skills, setSkills] = useState("");
   const [availability, setAvailability] = useState("");
 
-  // Fetch all workers if no filters are set
-  useEffect(() => {
-    if (!skills && !availability) {
-      const fetchAllWorkers = async () => {
-        try {
-          const response = await fetch("http://localhost:3000/api/search/users", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-          if (!response.ok) throw new Error("Failed to fetch all workers");
-          const data = await response.json();
-          onSearchResults(data);
-        } catch (error) {
-          console.error("Error fetching all workers:", error);
-          onSearchResults([]);
-        }
-      };
-      fetchAllWorkers();
-    }
-  }, [skills, availability, onSearchResults]);
-
   // Search handler
   const handleSearch = async () => {
     try {
       const queryParams = new URLSearchParams();
       if (skills) queryParams.append("skills", skills);
       if (availability) queryParams.append("availability", availability);
+
+      // Evita la fetch se entrambi sono vuoti
+      if (!skills && !availability) {
+        alert("Inserisci almeno un parametro di ricerca.");
+        return;
+      }
 
       const response = await fetch(
         `http://localhost:3000/api/search/users?${queryParams.toString()}`,
