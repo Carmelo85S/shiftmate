@@ -1,17 +1,15 @@
 import { useState } from "react";
 import Button from "../ui/Button";
-import { Calendar, Clock, Euro, Handshake, MapPin } from "lucide-react";
-import type { Job, User } from "../../types/types";
+import { Calendar, Clock, Euro, Handshake, MapPin, Loader2 } from "lucide-react";
+import type { JobCardProps } from "../../types/types";
 
-const JobCard = ({
-  job,
-  user,
-  onApply
-}: {
-  job: Job;
-  user: User | null;
-  onApply: (id: number) => void;
-}) => {
+const truncateText = (text: string, limit: number) => {
+  if (text.length <= limit) return text;
+  const trimmed = text.slice(0, limit).trim();
+  return trimmed.slice(0, trimmed.lastIndexOf(" ")) + "...";
+};
+
+const JobCard = ({ job, user, onApply, applying = false }: JobCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded(!expanded);
 
@@ -22,7 +20,9 @@ const JobCard = ({
         <div>
           <h3 className="text-lg font-semibold text-gray-900 leading-snug">
             {job.title}{" "}
-            <span className="text-gray-500 font-normal">– {job.users?.company_name || "Company not specified"}</span>
+            <span className="text-gray-500 font-normal">
+              – {job.users?.company_name || "Company not specified"}
+            </span>
           </h3>
           <p className="text-sm text-gray-400 mt-1">{job.industry}</p>
         </div>
@@ -57,13 +57,13 @@ const JobCard = ({
           <span className="font-medium text-gray-800">Requirements:</span>{" "}
           {expanded
             ? job.requirements
-            : `${job.requirements.substring(0, 120)}${job.requirements.length > 120 ? "..." : ""}`}
+            : truncateText(job.requirements, 120)}
         </p>
         <p>
           <span className="font-medium text-gray-800">Responsibilities:</span>{" "}
           {expanded
             ? job.responsibilities
-            : `${job.responsibilities.substring(0, 120)}${job.responsibilities.length > 120 ? "..." : ""}`}
+            : truncateText(job.responsibilities, 120)}
         </p>
 
         {(job.requirements.length > 120 || job.responsibilities.length > 120) && (
@@ -80,16 +80,22 @@ const JobCard = ({
       {user?.user_type === "worker" && (
         <div className="mt-6 flex justify-end">
           <Button
-            icon={<Handshake className="w-5 h-5" />}
-            label="Apply"
+            icon={
+              applying ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Handshake className="w-5 h-5" />
+              )
+            }
+            label={applying ? "Applying..." : "Apply"}
             bgColorClass="bg-yellow-400"
             textColorClass="text-indigo-900"
-            hoverBgColorClass="bg-yellow-300"
+            hoverBgColorClass={applying ? "bg-yellow-400" : "bg-yellow-300"}
             onClick={() => onApply(job.id)}
+            disabled={applying}
           />
         </div>
       )}
-      
     </div>
   );
 };

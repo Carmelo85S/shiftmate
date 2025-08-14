@@ -15,6 +15,7 @@ export interface ButtonProps {
   textColorClass: string;
   hoverBgColorClass: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export type Job = {
@@ -66,6 +67,13 @@ export interface PostedJob {
   is_active: boolean;
   requirements?: string;
   responsibilities?: string;
+}
+
+export interface JobCardProps {
+  job: Job;
+  user: User | null;
+  onApply: (id: number) => void;
+  applying?: boolean;
 }
 
 export interface Message {
