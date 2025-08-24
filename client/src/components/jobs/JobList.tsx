@@ -117,6 +117,7 @@ const JobList = ({ jobs: propJobs }: JobListProps) => {
             />
           ))}
       </div>
+      
     </section>
   );
 };

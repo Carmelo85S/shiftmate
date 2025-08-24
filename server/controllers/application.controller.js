@@ -113,7 +113,7 @@ export const applyToJob = async (req, res) => {
 
     const { data, error: insertError } = await supabase
       .from('applications')
-      .insert([{ user_id, job_id }])
+      .insert([{ user_id, job_id, status: 'pending' }])
       .select();
 
     if (insertError) throw insertError;

@@ -40,6 +40,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ message, onClose }) => {
       <article className="whitespace-pre-wrap text-gray-800 leading-relaxed text-base">
         {message.content}
       </article>
+     
     </main>
   );
 };
