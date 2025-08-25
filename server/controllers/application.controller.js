@@ -204,3 +204,28 @@ export const cancelUserApplications = async (req, res) => {
     res.status(500).json({ error: 'Failed to cancel application' });
   }
 };
+
+export const changeStatus = async (req, res) => {
+  const { user_id, job_id, status } = req.body;
+
+  if (!user_id || !job_id || !status) {
+    return res.status(400).json({ error: 'Missing user_id, job_id, or status' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('applications')
+      .update({ status })
+      .eq('user_id', user_id)
+      .eq('job_id', job_id)
+      .select();
+
+    if (error) throw error;
+
+    res.status(200).json({ message: 'Application status updated', data });
+  } catch (error) {
+    console.error('Change status error:', error);
+    res.status(500).json({ error: 'Failed to change application status' });
+  }
+};
+

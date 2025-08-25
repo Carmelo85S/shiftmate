@@ -82,6 +82,10 @@ export interface Message {
   created_at: string;
   job_id: number;
   is_read: boolean;
-  job?: { title: string } | null;
+  job?: {
+    id: any; title: string 
+} | null;
   sender: { id: string; name: string; email: string } | null;
+  status: 'pending' | 'accepted' | 'rejected' ;
+
 }
