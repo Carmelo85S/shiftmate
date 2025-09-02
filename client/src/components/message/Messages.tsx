@@ -28,9 +28,9 @@ const Messages = () => {
       }
 
       try {
-const res = await fetch(`http://localhost:3000/api/messages/${user.id}/all?userType=${user.user_type}`, {
-  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-});
+      const res = await fetch(`http://localhost:3000/api/messages/${user.id}/all?userType=${user.user_type}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to fetch messages");
