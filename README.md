@@ -88,26 +88,26 @@ Authentication
 POST /api/register – Register as Business or Worker
 POST /api/login – Login
 
-Profile
+# Profile
 GET /api/profile/:userId – Get profile information
 PUT /api/profile/:userId – Update profile
 
-Jobs
+# Jobs
 POST /api/jobs – Create a job (Business only)
 GET /api/jobs – Get all jobs
 GET /api/jobs/:id – Get job details
 
-Applications
+# Applications
 POST /api/applications – Apply for a job (Worker only)
 GET /api/applications/:userId – Get all applications for a user
 
-Search
+# Search
 GET /api/search – Search for jobs or workers
 
-Messages
+# Messages
 POST /api/messages – Send a message
 GET /api/messages/:userId – Get all messages for a user
 
-Statistics
+# Statistics
 GET /api/stats – Get total users and total jobs
 
