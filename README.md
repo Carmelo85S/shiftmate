@@ -63,18 +63,25 @@ ShiftMate simplifies hiring and job hunting—no messy emails, just a smooth way
 ```bash
 git clone https://github.com/Carmelo85S/shiftmate.git
 cd shiftmate
+```
 
 # Server
+```bash
 cd server
 npm install
+```
 
 # Client
+```bash
 cd ../client
 npm install
+```
 
 # Setup environment variables
+```bash
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
+```
 
 # API Routes
 Authentication
